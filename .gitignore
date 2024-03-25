@@ -38,3 +38,7 @@ build
 .cproject
 .project
 .settings/
+
+# xia
+change.sh
+my_test/
