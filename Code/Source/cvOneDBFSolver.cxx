@@ -1558,13 +1558,9 @@ void cvOneDBFSolver::GenerateSolution(void){
   }// End while
 
   checkMass += mathModels[0]->CheckMassBalance() * deltaTime;
-  cvOneDMaterial* threeDInterface = subdomainList[0]->GetMaterial();
-  double * tmp = currentSolution -> GetEntries();
-  double curS= *tmp;  //Area of the current step
   cout << "  Time = " << currentTime << ", ";
   cout << "Mass = " << checkMass << ", ";
-  cout << "Tot iters = " << std::to_string(iter) << ", ";
-  cout << "Pressure in Node 0 at current time step = " << threeDInterface->GetPressure(curS,0) << endl;
+  cout << "Tot iters = " << std::to_string(iter) << endl;
 
   // Save solution if needed
   if(step % stepSize == 0){
@@ -1572,10 +1568,12 @@ void cvOneDBFSolver::GenerateSolution(void){
     title = String1 + String2;
     currentSolution->Rename(title.data());
 
-    for(int j=0;j<currentSolution -> GetDimension(); j++){
+    double * tmp = currentSolution -> GetEntries();
+    int j;
+
+    for(j=0;j<currentSolution -> GetDimension(); j++){
       TotalSolution[q][j] = tmp[j];
     }
-    
     q++;
   }
   *previousSolution = *currentSolution;
