@@ -464,7 +464,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           opts->segmentUpstreamSegment.push_back(atoi(tokenizedString[13].c_str()));
           // int branchSegment,
           opts->segmentBranchSegment.push_back(atoi(tokenizedString[14].c_str()));
-          // char* boundType,
+          // char* boundType, outlet
           opts->segmentBoundType.push_back(tokenizedString[15]);
           // Curve ID Instead of num,value,time
           // double* value,
@@ -495,7 +495,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           opts->quadPoints = atoi(tokenizedString[4].c_str());
           // int CurveID,
           opts->inletDataTableName = tokenizedString[5].c_str();
-          // char* boundType,
+          // char* boundType, inlet
           opts->boundaryType = tokenizedString[6];
           // double conv,
           opts->convergenceTolerance = atof(tokenizedString[7].c_str());
