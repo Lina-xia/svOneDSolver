@@ -50,7 +50,9 @@
 
 
 // Static Declarations...
-int cvOneDMthModelBase::impedIncr;
+int     cvOneDMthModelBase::impedIncr;
+double  cvOneDMthModelBase::CurrentInletFlow = 0.0;
+double  cvOneDMthModelBase::CurrentInletPressure = 0.0;
 
 cvOneDMthModelBase::cvOneDMthModelBase(const cvOneDModel* modl){
 }
@@ -126,21 +128,20 @@ void cvOneDMthModelBase::SetBoundaryConditions(){
 
   long eqNumbers[2];  // two degress of freedom per node
   cvOneDSubdomain* sub;
-  double InitialPressure;
   double currP, currS, resistance;
 
   // Set up Inlet Dirichlet boundary condition (the default is flow rate)
   GetNodalEquationNumbers( 0, eqNumbers, 0);
-  sub= subdomainList[0];
   switch(cvOneDBFSolver::inletBCtype){
     case BoundCondTypeScope::FLOW:
-      (*currSolution)[eqNumbers[1]] = GetFlowRate();
+    case BoundCondTypeScope::THREEDCOUPLING:
+      (*currSolution)[eqNumbers[1]] = CurrentInletFlow;  //GetFlowRate();
       break;
 
     case BoundCondTypeScope::PRESSURE_WAVE:
-      (*currSolution)[eqNumbers[0]] = sub->GetMaterial()->GetArea(GetFlowRate(),0);
-       InitialPressure = flrt[0];
+      (*currSolution)[eqNumbers[0]] = CurrentInletPressure;  //sub->GetMaterial()->GetArea(GetFlowRate(),0);
       break;
+
     default:
 
       break;
@@ -194,10 +195,10 @@ void cvOneDMthModelBase::SetBoundaryConditions(){
 double cvOneDMthModelBase::CheckMassBalance(){
 
   long eqNumbers[2];  // Two degress of freedom per node
-  double inletFlow = GetFlowRate();
+  double inletFlow;
 
-  if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW){
-    inletFlow = GetFlowRate();
+  if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW || BoundCondTypeScope::THREEDCOUPLING){
+    inletFlow = CurrentInletFlow;
   }else{
    GetNodalEquationNumbers( 0, eqNumbers, 0);
    inletFlow = (*currSolution)[eqNumbers[1]];
@@ -233,7 +234,7 @@ void cvOneDMthModelBase::ApplyBoundaryConditions(){
     // Set up the inlet Dirichlet boundary condition (flow rate)
     // RHS corresponding to imposed Essential BC
     value = 0.0;
-    if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW){
+    if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW || cvOneDBFSolver::inletBCtype == BoundCondTypeScope::THREEDCOUPLING){
       GetNodalEquationNumbers(0, eqNumbers, 0);
       cvOneDGlobal::solver->SetSolution(eqNumbers[1], value);
     }else if (cvOneDBFSolver::inletBCtype == BoundCondTypeScope::PRESSURE_WAVE){
@@ -316,7 +317,7 @@ void cvOneDMthModelBase::ApplyBoundaryConditions(){
       // for these BC the Inlet term doesn't have to be specialized
       // so same treatment as regular Essential BC like in Brooke's
       value = 0.0;  // RHS corresponding to imposed Essential BC
-      if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW){
+      if(cvOneDBFSolver::inletBCtype == BoundCondTypeScope::FLOW || cvOneDBFSolver::inletBCtype == BoundCondTypeScope::THREEDCOUPLING){
         GetNodalEquationNumbers( 0, eqNumbers, 0);
         cvOneDGlobal::solver->SetSolution( eqNumbers[1], value);
       }else if (cvOneDBFSolver::inletBCtype == BoundCondTypeScope::PRESSURE_WAVE){
@@ -623,7 +624,7 @@ double cvOneDMthModelBase::GetFlowRate(){
   double xi = (correctedTime - time[ptr]) / (time[ptr+1] - time[ptr]);
   // Return
   double result = flrt[ptr] + xi * (flrt[ptr+1] - flrt[ptr]);
-  //printf("Result Flow: %e\n",result);
+  // printf("Result Flow: %e\n",result);
   return result;
 
 }

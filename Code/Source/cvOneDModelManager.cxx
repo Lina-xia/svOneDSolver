@@ -280,6 +280,51 @@ int cvOneDModelManager::SolveModel(double dt, long stepSize,
   return CV_OK;
 }
 
+
+// ===================================
+// THREEDCOUPLING BC SOLVE MODEL， Xia
+// ===================================
+int cvOneDModelManager::SolveModel(double dt, long stepSize,
+                                   long maxStep, long quadPoints,
+                                   char *boundType, double conv, int useIV, int usestab){
+  BoundCondTypeScope::BoundCondType boundT;
+
+  // set the creation flag to off.
+  cvOneDGlobal::isCreating = false;
+
+  // convert char string to boundary condition type
+  if (!strcmp(boundType, "THREEDCOUPLING"))
+  {
+    boundT = BoundCondTypeScope::THREEDCOUPLING;
+    printf("Inlet Condition Type: THREEDCOUPLING\n");
+  }else{
+    return CV_ERROR;
+  }
+
+  // Set Solver Options
+  cvOneDMthSegmentModel::STABILIZATION = usestab; // 1=stabilization, 0=none
+  cvOneDGlobal::CONSERVATION_FORM = useIV;
+  cvOneDBFSolver::ASCII = 1;
+
+  cvOneDBFSolver::SetModelPtr(cvOneDGlobal::gModelList[cvOneDGlobal::currentModel]);
+
+  // We need to get these from the solver
+  cvOneDBFSolver::SetDeltaTime(dt);
+  cvOneDBFSolver::SetStepSize(stepSize);
+  cvOneDBFSolver::SetMaxStep(maxStep);
+  cvOneDBFSolver::SetQuadPoints(quadPoints);
+  cvOneDBFSolver::SetInletBCType(boundT);
+  cvOneDBFSolver::SetConvergenceCriteria(conv);
+
+  cvOneDGlobal::isSolving = true;
+
+  cvOneDBFSolver::Solve();
+
+  cvOneDGlobal::isSolving = false;
+
+  return CV_OK;
+}
+
 // ================
 // CREATE DATATABLE
 // ================

@@ -1072,10 +1072,12 @@ void cvOneDBFSolver::DefineMthModels(){
   cout << "Joint No. "<< jointList.size() << endl;
   cout << "Outlet No. "<< outletList.size() << endl;
   cvOneDMthSegmentModel* segM = new cvOneDMthSegmentModel(subdomainList, jointList, outletList, quadPoints);
-
-  //specify inlet flow rate boundary condition with time
-  segM->SetInflowRate(flowTime, flowRate, numFlowPts, flowTime[numFlowPts-1]);
-  Period = flowTime[numFlowPts-1];
+  
+  if (inletBCtype != BoundCondTypeScope::THREEDCOUPLING){
+    // specify inlet flow rate boundary condition with time
+    segM->SetInflowRate(flowTime, flowRate, numFlowPts, flowTime[numFlowPts-1]);
+    Period = flowTime[numFlowPts-1];
+  }
 
   cvOneDMthBranchModel* branchM = new cvOneDMthBranchModel(subdomainList, jointList, outletList);
   AddOneModel(segM);
@@ -1395,7 +1397,7 @@ void cvOneDBFSolver::GenerateSolution(void){
     mathModels[i]->EquationInitialize(previousSolution, currentSolution);
   }
 
-  double cycleTime = mathModels[0]->GetCycleTime();
+  // double cycleTime = mathModels[0]->GetCycleTime(); //= cvOneDBFSolver::Period
 
   // Global Solution Loop
   long q=1;
@@ -1414,14 +1416,14 @@ void cvOneDBFSolver::GenerateSolution(void){
     int iter = 0;
     double normf = 1.0;
     double norms = 1.0;
-
-    if(fmod(currentTime, cycleTime) <5.0E-6 || -(fmod(currentTime,cycleTime)-cycleTime)<5.0E-6) {
+    // When inletBCtype = THREEDCOUPLING, Period = 0. "Time cycle" is unknown, the following statement makes no sense. 
+    if( inletBCtype != BoundCondTypeScope::THREEDCOUPLING & (fmod(currentTime, Period) <5.0E-6 || -(fmod(currentTime, Period)-Period)<5.0E-6) ) {
       checkMass = 0;
       cout << "**** Time cycle " << numberOfCycle++ << endl;
     }
     currentTime += deltaTime;
 
-    while(true){
+    while(true){  //iter循环
       tstart_iter=clock();
 
       for(i = 0; i < numMath; i++){
@@ -1536,15 +1538,42 @@ void cvOneDBFSolver::GenerateSolution(void){
         currentSolution->CheckPositive(0,2,currentSolution->GetDimension());
       }
 
-      // Set Boundary Conditions
-      mathModels[0]->SetBoundaryConditions();
       tend_iter=clock();
-
       cout << "    iter: " << std::to_string(iter) << " ";
       cout << "normf: " << normf << " ";
       cout << "norms: " << norms << " ";
       cout << "time: " << ((float)(tend_iter-tstart_iter))/CLOCKS_PER_SEC << endl;
 
+    // Set Boundary Conditions
+    // GetFlowRate function computes only once per time step, which is used in each nonlinear iteration
+    cvOneDSubdomain* sub;
+    sub = subdomainList[0];
+    if (iter == 0){
+      switch(cvOneDBFSolver::inletBCtype){
+        case BoundCondTypeScope::FLOW:
+          cvOneDMthModelBase::CurrentInletFlow = mathModels[0]-> GetFlowRate();
+          break;
+
+        case BoundCondTypeScope::PRESSURE_WAVE:
+          cvOneDMthModelBase::CurrentInletPressure = sub->GetMaterial()->GetArea(mathModels[0]->GetFlowRate(),0);
+          break;
+
+        case BoundCondTypeScope::THREEDCOUPLING:
+          cout << "Enter the value for current time " << currentTime << ": " ;
+          double input;
+          cin >> input;
+          cvOneDMthModelBase::CurrentInletFlow = input;
+          cout << endl;
+          break;
+
+        default:
+
+          break;
+      }
+    }
+      
+      // cout << "Xia: CurrentFlow = " << cvOneDMthModelBase::CurrentInletFlow << "; CurrentPressure = " << cvOneDMthModelBase::CurrentInletPressure << endl;
+      mathModels[0]->SetBoundaryConditions();
 
       if(iter > MAX_NONLINEAR_ITERATIONS){
         cout << "Error: Newton not converged, exceed max iterations" << endl;
@@ -1554,7 +1583,6 @@ void cvOneDBFSolver::GenerateSolution(void){
 
     // Increment Iteration Number
     iter++;
-
   }// End while
 
   checkMass += mathModels[0]->CheckMassBalance() * deltaTime;
@@ -1571,7 +1599,7 @@ void cvOneDBFSolver::GenerateSolution(void){
     sprintf( String2, "%ld", (unsigned long)step);
     title = String1 + String2;
     currentSolution->Rename(title.data());
-    
+
     for(int j=0;j<currentSolution -> GetDimension(); j++){
       TotalSolution[q][j] = tmp[j];
     }

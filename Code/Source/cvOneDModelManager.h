@@ -78,6 +78,10 @@ class cvOneDModelManager{
                    long maxStep,long quadPoints,
                    int len,char* boundType,double* values,
                    double* times,double conv, int useIV, int usestab);
+    // THREEDCOUPLING BC SOLVE
+    int SolveModel(double dt,long stepSize,
+                   long maxStep,long quadPoints,
+                   char* boundType, double conv, int useIV, int usestab);
 
 };
 

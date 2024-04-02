@@ -55,6 +55,8 @@ class cvOneDMthModelBase{
   public:
 
     static int impedIncr;
+    static double CurrentInletFlow; //Xia: for InletBC == FLOW / THREEDCOUPLING
+    static double CurrentInletPressure; //Xia: for InletBC == PRESSURE_WAVE
 
     cvOneDMthModelBase(const cvOneDModel* modl);
     cvOneDMthModelBase(const vector<cvOneDSubdomain*>& subdList, const vector<cvOneDFEAJoint*>& jtList,
@@ -76,9 +78,9 @@ class cvOneDMthModelBase{
     typeOfEquation GetType() const {return type;}
     double GetCycleTime() const {return cycleTime;}
 
-  protected:
-
     double GetFlowRate();
+
+  protected:
 
     typeOfEquation type;
     long numberOfEquations;
