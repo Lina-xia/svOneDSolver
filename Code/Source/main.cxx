@@ -38,10 +38,10 @@ using namespace std;
 // WRITE PROGRAM HEADER
 // ====================
 void WriteHeader(){
-  printf("---------------------------------\n");
-  printf(" oneDSolver \n");
-  printf(" 1D Finite Element Hemodynamics  \n");
-  printf("---------------------------------\n");
+  cout << "---------------------------------" << endl;
+  cout << " oneDSolver" << endl;;
+  cout << " 1D Finite Element Hemodynamics" << endl;
+  cout << "---------------------------------" << endl;
 }
 
 // ====================================
@@ -71,14 +71,14 @@ int getDataTableIDFromStringKey(string key){
 void createAndRunModel(cvOneDOptions* opts){
 
   // MESSAGE
-  printf("\n");
-  printf("Creating and Running Model ...\n");
+  cout << endl;
+  cout << "Creating and Running Model ..." << endl;
 
   // CREATE MODEL MANAGER
   cvOneDModelManager* oned = new cvOneDModelManager((char*)opts->modelName.c_str());
 
   // CREATE NODES
-  printf("Creating Nodes ... \n");
+  cout << "Creating Nodes ... " << endl;
   int totNodes = opts->nodeName.size();
   int nodeError = CV_OK;
   for(int loopA=0;loopA<totNodes;loopA++){
@@ -91,7 +91,7 @@ void createAndRunModel(cvOneDOptions* opts){
   }
 
   // CREATE JOINTS
-  printf("Creating Joints ... \n");
+  cout << "Creating Joints ... " << endl;
   int totJoints = opts->jointName.size();
   int jointError = CV_OK;
   int* asInlets = NULL;
@@ -150,7 +150,7 @@ void createAndRunModel(cvOneDOptions* opts){
   }
 
   // CREATE MATERIAL
-  printf("Creating Materials ... \n");
+  cout << "Creating Materials ... " << endl;
   int totMaterials = opts->materialName.size();
   int matError = CV_OK;
   double doubleParams[3];
@@ -184,7 +184,7 @@ void createAndRunModel(cvOneDOptions* opts){
   }
 
   // CREATE DATATABLES
-  printf("Creating Data Tables ... \n");
+  cout << "Creating Data Tables ... " << endl;
   int totCurves = opts->dataTableName.size();
   int curveError = CV_OK;
   for(int loopA=0;loopA<totCurves;loopA++){
@@ -195,7 +195,7 @@ void createAndRunModel(cvOneDOptions* opts){
   }
 
   // SEGMENT DATA
-  printf("Creating Segments ... \n");
+  cout << "Creating Segments ... " << endl;
   int segmentError = CV_OK;
   int totalSegments = opts->segmentName.size();
   int curveTotals = 0;
@@ -265,7 +265,7 @@ void createAndRunModel(cvOneDOptions* opts){
   int tot;
 
   // SOLVE MODEL
-  printf("Solving Model ... \n");
+  cout << "Solving Model ... " << endl;
   string inletCurveName = opts->inletDataTableName;
   int solveError = CV_OK;
   if (inletCurveName != "NONE") {
@@ -321,8 +321,8 @@ void createAndRunModel(cvOneDOptions* opts){
 void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFiles){
 
   // Message
-  printf("\n");
-  printf("Reading file: %s ... \n",inputFile.c_str());
+  cout << endl;
+  cout << "Reading file: " << inputFile.c_str() << "..." << endl;
 
   // Declare
   cvStringVec tokenizedString;
@@ -358,7 +358,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
     if(!buffer.empty()){
       // CHECK THE ELEMENT TYPE
       if(upper_string(tokenizedString[0]) == "MODEL"){
-        //printf("Found Model.\n");
+        //cout << "Found Model.\n");
         if(opts->modelNameDefined){
           throw cvException("ERROR: Model name already defined\n");
         }
@@ -374,7 +374,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
         }
         opts->modelNameDefined = true;
       }else if(upper_string(tokenizedString[0]) == "NODE"){
-        // printf("Found Joint.\n");
+        // cout << "Found Joint.\n");
         if(tokenizedString.size() > 5){
           throw cvException(string("ERROR: Too many parameters for NODE token. Line " + to_string(lineCount) + "\n").c_str());
         }else if(tokenizedString.size() < 5){
@@ -390,7 +390,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid NODE Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == "JOINT"){
-        // printf("Found Joint.\n");
+        // cout << "Found Joint.\n");
         if(tokenizedString.size() > 5){
           throw cvException(string("ERROR: Too many parameters for JOINT token. Line " + to_string(lineCount) + "\n").c_str());
         }else if(tokenizedString.size() < 5){
@@ -407,7 +407,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid JOINT Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == "JOINTINLET"){
-        // printf("Found JointInlet.\n");
+        // cout << "Found JointInlet.\n");
         if(tokenizedString.size() < 3){
           throw cvException(string("ERROR: Not enough parameters for JOINTINLET token. Line " + to_string(lineCount) + "\n").c_str());
         }
@@ -427,7 +427,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid JOINTINLET Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == "JOINTOUTLET"){
-        // printf("Found JointOutlet.\n");
+        // cout << "Found JointOutlet.\n");
         if(tokenizedString.size() < 3){
           throw cvException(string("ERROR: Not enough parameters for JOINTOUTLET token. Line " + to_string(lineCount) + "\n").c_str());
         }
@@ -447,7 +447,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid JOINTOUTLET Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == "SEGMENT"){
-        // printf("Found Segment.\n");
+        // cout << "Found Segment.\n");
         if(tokenizedString.size() > 17){
           throw cvException(string("ERROR: Too many parameters for SEGMENT token. Line " + to_string(lineCount) + "\n").c_str());
         }else if(tokenizedString.size() < 17){
@@ -493,7 +493,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid SEGMENT Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == "SOLVEROPTIONS"){
-        // printf("Found Solver Options.\n");
+        // cout << "Found Solver Options.\n");
         if(opts->solverOptionDefined){
           throw cvException("ERROR: SOLVEROPTIONS already defined\n");
         }
@@ -548,7 +548,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           }
         }
       }else if(upper_string(tokenizedString[0]) == std::string("DATATABLE")){
-        // printf("Found Data Table.\n");
+        // cout << "Found Data Table.\n");
         try{
 
           // Get Datatable Name
@@ -585,7 +585,7 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid DATATABLE Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if(upper_string(tokenizedString[0]) == std::string("MATERIAL")){
-        // printf("Found Material.\n");
+        // cout << "Found Material.\n");
         if(tokenizedString.size() > 10){
           throw cvException(string("ERROR: Too many parameters for MATERIAL token. Line " + to_string(lineCount) + "\n").c_str());
         }else if(tokenizedString.size() < 8){
@@ -638,14 +638,14 @@ void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFi
           throw cvException(string("ERROR: Invalid INCLUDE Format. Line " + to_string(lineCount) + "\n").c_str());
         }
       }else if((tokenizedString.size() == 0)||(tokenizedString[0].at(0) == '#')||(tokenizedString[0].find_first_not_of(' ') == std::string::npos)){
-        // printf("Found Blank.\n");
+        // cout << "Found Blank.\n");
         // COMMENT OR BLANK LINE: DO NOTHING
       }else{
         // TOKEN NOT RECOGNIZED
         throw cvException(string("ERROR: Invalid Token in input file, line: "  + to_string(lineCount) + "\n").c_str());
       }
     }
-    // printf("Line: %d, Buffer: %s\n",lineCount,buffer.c_str());
+    // cout << "Line: %d, Buffer: %s\n",lineCount,buffer.c_str());
     // getchar();
 
     // Increment Line Count
@@ -692,10 +692,10 @@ void runOneDSolver(string inputFile){
 
   // Model Checking
   opts->check();
-
-  // Print Input Data Echo
-  string fileName("echo.out");
-  opts->printToFile(fileName);
+  
+  // // Print Input Data Echo
+  // string fileName("echo.out");
+  // opts->printToFile(fileName);
 
   // Create Model and Run Simulation
   createAndRunModel(opts);
@@ -708,6 +708,20 @@ void runOneDSolver(string inputFile){
 // MAIN FUNCTION
 // =============
 int main(int argc, char** argv){
+  string inputFile = "OneDtest.in";  //出口名字1.in
+  string outletName = "outlet1.out";  //出口名字1.out
+  couple mycouple(1); //在三维里面会声明couple里面元素的值，例子是一个出口
+  svOneDSolver(inputFile, outletName);   //每一个时间步读取 class couple 里面的值
+
+  return 0;
+}
+
+void svOneDSolver(const std::string& inputFile, const std::string& outletName){
+
+  ofstream outFile(outletName);
+  // 重定向 std::cout 到文件流
+  streambuf *coutbuf = cout.rdbuf(); // 保存原始的 std::cout buffer
+  cout.rdbuf(outFile.rdbuf()); // 重定向 std::cout 到文件流
 
   // Write Program Header
   WriteHeader();
@@ -715,17 +729,17 @@ int main(int argc, char** argv){
   try{
 
     // Run Simulation
-    string inputFile(argv[1]);
+    // string inputFile(argv[1]);
     runOneDSolver(inputFile);
 
   }catch(exception& e){
     // Print Exception Message
-    printf("%s\n",e.what());
+    cout << e.what() << endl;
     // Execution Terminated
-    printf("Terminated.\n");
-    return 1;
+    cout << "Terminated." << endl;
   }
-  printf("Completed!\n");
-  return 0;
-
+  cout << "Completed!" << endl;
+  
+  cout.rdbuf(coutbuf);
+  outFile.close();
 }

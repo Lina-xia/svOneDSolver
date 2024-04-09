@@ -229,28 +229,28 @@ int cvOneDModelManager::SolveModel(double dt, long stepSize,
   // convert char string to boundary condition type
   if(!strcmp( boundType, "NOBOUND")){
     boundT = BoundCondTypeScope::NOBOUND;
-    printf("Inlet Condition Type: NOBOUND\n");
+    cout << "Inlet Condition Type: NOBOUND" << endl;
   }else if(!strcmp( boundType, "PRESSURE")){
     boundT = BoundCondTypeScope::PRESSURE;
-    printf("Inlet Condition Type: PRESSURE\n");
+    cout << "Inlet Condition Type: PRESSURE" << endl;
   }else if(!strcmp( boundType, "PRESSURE_WAVE")){
     boundT = BoundCondTypeScope::PRESSURE_WAVE;
-    printf("Inlet Condition Type: PRESSURE_WAVE\n");
+    cout << "Inlet Condition Type: PRESSURE_WAVE" << endl;
   }else if(!strcmp( boundType, "FLOW")){
     boundT = BoundCondTypeScope::FLOW;
-    printf("Inlet Condition Type: FLOW\n");
+    cout << "Inlet Condition Type: FLOW" << endl;
   }else if(!strcmp( boundType, "RESISTANCE")){
     boundT = BoundCondTypeScope::RESISTANCE;
-    printf("Inlet Condition Type: RESISTANCE\n");
+    cout << "Inlet Condition Type: RESISTANCE" << endl;
   }else if(!strcmp( boundType, "RESISTANCE_TIME")){
     boundT = BoundCondTypeScope::RESISTANCE_TIME;
-    printf("Inlet Condition Type: RESISTANCE_TIME\n");
+    cout << "Inlet Condition Type: RESISTANCE_TIME" << endl;
   }else if(!strcmp( boundType, "RCR")){
     boundT = BoundCondTypeScope::RCR;
-    printf("Inlet Condition Type: RCR\n");
+    cout << "Inlet Condition Type: RCR" << endl;
   }else if(!strcmp( boundType, "CORONARY")){
     boundT = BoundCondTypeScope::CORONARY;
-    printf("Inlet Condition Type: CORONARY\n");
+    cout << "Inlet Condition Type: CORONARY" << endl;
   }else{
     return CV_ERROR;
   }
@@ -296,7 +296,7 @@ int cvOneDModelManager::SolveModel(double dt, long stepSize,
   if (!strcmp(boundType, "THREEDCOUPLING"))
   {
     boundT = BoundCondTypeScope::THREEDCOUPLING;
-    printf("Inlet Condition Type: THREEDCOUPLING\n");
+    cout << "Inlet Condition Type: THREEDCOUPLING" << endl;
   }else{
     return CV_ERROR;
   }
