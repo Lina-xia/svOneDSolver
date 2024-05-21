@@ -1560,8 +1560,8 @@ void cvOneDBFSolver::GenerateSolution(void){
           break;
 
         case BoundCondTypeScope::THREEDCOUPLING:
-          cout << "The flow for current time " << currentTime << ": " << couple3D1D::flow[0] << endl;
-          cvOneDMthModelBase::CurrentInletFlow = couple3D1D::flow[0];
+          cout << "The flow for current time " << currentTime << ": " << couple::flow[0] << endl;
+          cvOneDMthModelBase::CurrentInletFlow = couple::flow[0];
           break;
 
         default:
@@ -1591,8 +1591,8 @@ void cvOneDBFSolver::GenerateSolution(void){
   cout << "Mass = " << checkMass << ", ";
   cout << "Tot iters = " << std::to_string(iter) << endl;
   double inletPressure = threeDInterface->GetPressure(curS,0);
-  couple3D1D::pressure[0] = inletPressure;
-  // cout << "Pressure in Node 0 at current time step = " << couple3D1D::pressure[0] << endl;
+  couple::pressure[0] = inletPressure;
+  // cout << "Pressure in Node 0 at current time step = " << couple::pressure[0] << endl;
 
   // Save solution if needed
   if(step % stepSize == 0){

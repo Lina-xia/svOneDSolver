@@ -709,16 +709,16 @@ void runOneDSolver(string inputFile){
 // =============
 int main(int argc, char** argv){
   string inputFile = "OneDtest.in";  //出口名字1.in
-  string outputFile = "OneDtest.out";  //出口名字1.out
-  couple3D1D mycouple(1); //在三维里面会声明couple里面元素的值，例子是一个出口
-  svOneDSolver(inputFile, outputFile);   //每一个时间步读取 class couple3D1D 里面的值
+  string outletName = "outlet1.out";  //出口名字1.out
+  couple mycouple(1); //在三维里面会声明couple里面元素的值，例子是一个出口
+  svOneDSolver(inputFile, outletName);   //每一个时间步读取 class couple 里面的值
 
   return 0;
 }
 
-void svOneDSolver(const std::string& inputFile, const std::string& outputFile){
+void svOneDSolver(const std::string& inputFile, const std::string& outletName){
 
-  ofstream outFile(outputFile);
+  ofstream outFile(outletName);
   // 重定向 std::cout 到文件流
   streambuf *coutbuf = cout.rdbuf(); // 保存原始的 std::cout buffer
   cout.rdbuf(outFile.rdbuf()); // 重定向 std::cout 到文件流

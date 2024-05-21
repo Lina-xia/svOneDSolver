@@ -1,9 +1,9 @@
 //xia
 
-class couple3D1D{
+class couple{
 public:
 
-    couple3D1D(int num){
+    couple(int num){
         num_of_outlet = num;
         flow = new double[num_of_outlet];
         pressure = new double[num_of_outlet];
@@ -13,7 +13,7 @@ public:
         }
     }
 
-    ~couple3D1D(){
+    ~couple(){
         delete[] flow;
         delete[] pressure;
     }
