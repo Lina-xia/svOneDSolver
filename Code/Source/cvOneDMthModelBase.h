@@ -57,7 +57,6 @@ class cvOneDMthModelBase{
     static int impedIncr;
     static double CurrentInletFlow; //Xia: for InletBC == FLOW / THREEDCOUPLING
     static double CurrentInletPressure; //Xia: for InletBC == PRESSURE_WAVE
-    // static int outletSerial;  //在那里赋值
 
     cvOneDMthModelBase(const cvOneDModel* modl);
     cvOneDMthModelBase(const vector<cvOneDSubdomain*>& subdList, const vector<cvOneDFEAJoint*>& jtList,

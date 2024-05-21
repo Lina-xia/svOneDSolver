@@ -48,5 +48,4 @@ void createAndRunModel(cvOneDOptions* opts);
 void readModelFile(string inputFile, cvOneDOptions* opts, cvStringVec includedFiles);
 void readModel(string inputFile, cvOneDOptions* opts);
 void runOneDSolver(string inputFile);
-void svOneDSolver(const std::string& inputFile, const std::string& outletName);
 

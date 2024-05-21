@@ -1099,12 +1099,12 @@ void cvOneDBFSolver::QuerryModelInformation(void)
   outletList.resize(0);
   subdomainList.resize(0);
 
-    cout << endl;
-    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    cout << "Number of Joints: " << ij << endl;
-    cout << "Number of Segments: " << is << endl;
-    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    cout << endl;
+    printf("\n");
+    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("Number of Joints: %ld\n",ij);
+    printf("Number of Segments: %ld\n",is);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("\n");
 
     long int i, j;
 
@@ -1416,7 +1416,6 @@ void cvOneDBFSolver::GenerateSolution(void){
     int iter = 0;
     double normf = 1.0;
     double norms = 1.0;
-
     // When inletBCtype = THREEDCOUPLING, Period = 0. "Time cycle" is unknown, the following statement makes no sense. 
     if( inletBCtype != BoundCondTypeScope::THREEDCOUPLING & (fmod(currentTime, Period) <5.0E-6 || -(fmod(currentTime, Period)-Period)<5.0E-6) ) {
       checkMass = 0;
@@ -1560,8 +1559,11 @@ void cvOneDBFSolver::GenerateSolution(void){
           break;
 
         case BoundCondTypeScope::THREEDCOUPLING:
-          cout << "The flow for current time " << currentTime << ": " << couple::flow[0] << endl;
-          cvOneDMthModelBase::CurrentInletFlow = couple::flow[0];
+          cout << "Enter the value for current time " << currentTime << ": " ;
+          double input;
+          cin >> input;
+          cvOneDMthModelBase::CurrentInletFlow = input;
+          cout << endl;
           break;
 
         default:
@@ -1589,10 +1591,8 @@ void cvOneDBFSolver::GenerateSolution(void){
   double curS= *tmp;  //Area of the current step
   cout << "  Time = " << currentTime << ", ";
   cout << "Mass = " << checkMass << ", ";
-  cout << "Tot iters = " << std::to_string(iter) << endl;
-  double inletPressure = threeDInterface->GetPressure(curS,0);
-  couple::pressure[0] = inletPressure;
-  // cout << "Pressure in Node 0 at current time step = " << couple::pressure[0] << endl;
+  cout << "Tot iters = " << std::to_string(iter) << ", ";
+  cout << "Pressure in Node 0 at current time step = " << threeDInterface->GetPressure(curS,0) << endl;
 
   // Save solution if needed
   if(step % stepSize == 0){

@@ -52,7 +52,6 @@
 # include "cvOneDSubdomain.h"
 # include "cvOneDMthModelBase.h"
 # include "cvOneDFEAJoint.h"
-# include "couple.h"
 
 using namespace std;
 
