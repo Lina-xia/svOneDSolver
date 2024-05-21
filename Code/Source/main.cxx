@@ -708,8 +708,9 @@ void runOneDSolver(string inputFile){
 // MAIN FUNCTION
 // =============
 int main(int argc, char** argv){
-  string inputFile = "Outlet1.in";  //出口名字1.in
-  string outputFile = "Outlet1.out";  //出口名字1.out
+  string inputFile = "OneDtest.in";  //出口名字1.in
+  string outputFile = "OneDtest.out";  //出口名字1.out
+  couple3D1D mycouple(1); //在三维里面会声明couple里面元素的值，例子是一个出口
   svOneDSolver(inputFile, outputFile);   //每一个时间步读取 class couple3D1D 里面的值
 
   return 0;
